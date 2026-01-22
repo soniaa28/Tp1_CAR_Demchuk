@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+</head>
+<body>
+
+<h1>Registration</h1>
+
+<div th:if="${error == 'email_exists'}" style="color:red;">
+    This email already exists
+</div>
+
+<form method="post" th:action="@{/store/register}">
+    <div>
+        <input name="email" type="email" placeholder="Email" required>
+    </div>
+    <div>
+        <input name="password" type="password" placeholder="Password" required>
+    </div>
+    <div>
+        <input name="nom" placeholder="Nom" required>
+    </div>
+    <div>
+        <input name="prenom" placeholder="Prenom" required>
+    </div>
+
+    <button type="submit">Create</button>
+</form>
+
+<p><a href="/store/home">Back</a></p>
+
+</body>
+</html>
