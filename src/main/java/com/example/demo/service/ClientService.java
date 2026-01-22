@@ -27,4 +27,16 @@ public class ClientService {
     public Optional<Client> findByEmail(String email) {
         return clientRepository.findById(email);
     }
+
+    public Optional<Client> login(String email, String password) {
+        Optional<Client> clientOpt = clientRepository.findById(email);
+        if(clientOpt.isPresent())
+        {
+            Client client = clientOpt.get();
+            if(client.getPassword().equals(password)){
+                return Optional.of(client);
+            }
+        }
+        return Optional.empty();
+    }
 }

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<h1>Login</h1>
+<div th:if="${error == 'bad_credentials'}" style="color:red;">
+  Email ou mot de passe incorrect
+</div>
+
+<form method="post" th:action="@{/store/login}">
+  <div>
+    <input name="email" type="email" placeholder="Email" required>
+  </div>
+  <div>
+    <input name="password" type="password" placeholder="Password" required>
+  </div>
+
+  <button type="submit">Login</button>
+</form>
+
+<p><a href="/store/home">Back</a></p>
+</body>
+</html>

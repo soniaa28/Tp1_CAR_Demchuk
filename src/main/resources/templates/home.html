@@ -1,12 +1,25 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
 </head>
 <body>
-<p>
-    <a href="/store/register">Create account</a>
-</p>
+<!-- ЕСЛИ НЕ ЗАЛОГИНЕН -->
+<div th:if="${client == null}">
+    <p>
+        <a href="/store/register">Register</a> |
+        <a href="/store/login">Login</a>
+    </p>
+</div>
+
+<!-- ЕСЛИ ЗАЛОГИНЕН -->
+<div th:if="${client != null}">
+    <p>
+        Bonjour <b th:text="${client.prenom}"></b> !
+        <a href="/store/logout">Logout</a>
+    </p>
+</div>
 </body>
 </html>
