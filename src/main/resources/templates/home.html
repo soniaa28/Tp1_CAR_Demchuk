@@ -18,6 +18,7 @@
 <div th:if="${client != null}">
     <p>
         Bonjour <b th:text="${client.prenom}"></b> !
+        <a th:href="@{/store/commandes}">Mes commandes</a>
         <a href="/store/logout">Logout</a>
     </p>
 </div>

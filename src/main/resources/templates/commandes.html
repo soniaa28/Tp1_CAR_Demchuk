@@ -1,0 +1,43 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Commandes</title>
+</head>
+<body>
+
+<h1>Mes commandes</h1>
+
+<p>
+  Client: <b th:text="${client.prenom}"></b> <span th:text="${client.nom}"></span>
+</p>
+
+<form method="post" th:action="@{/store/commandes/create}">
+  <button type="submit">Créer une commande</button>
+</form>
+
+<h2>Liste</h2>
+
+<table border="1" cellpadding="6">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Date</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:if="${#lists.isEmpty(commandes)}">
+    <td colspan="2">Aucune commande</td>
+  </tr>
+
+  <tr th:each="c : ${commandes}">
+    <td th:text="${c.id}"></td>
+    <td th:text="${c.createdAt}"></td>
+  </tr>
+  </tbody>
+</table>
+
+<p><a th:href="@{/store/home}">Back home</a></p>
+
+</body>
+</html>
