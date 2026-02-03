@@ -1,26 +1,12 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Home</title>
-</head>
-<body>
-<!-- ЕСЛИ НЕ ЗАЛОГИНЕН -->
 <div th:if="${client == null}">
-    <p>
-        <a href="/store/register">Register</a> |
-        <a href="/store/login">Login</a>
-    </p>
+    <a th:href="@{/store/login}">Login</a> |
+    <a th:href="@{/store/register}">Register</a>
 </div>
 
-<!-- ЕСЛИ ЗАЛОГИНЕН -->
 <div th:if="${client != null}">
-    <p>
-        Bonjour <b th:text="${client.prenom}"></b> !
-        <a th:href="@{/store/commandes}">Mes commandes</a>
-        <a href="/store/logout">Logout</a>
-    </p>
+    Bonjour <b th:text="${client.prenom}"></b> <span th:text="${client.nom}"></span>
+    <form method="post" th:action="@{/store/logout}" style="display:inline">
+        <button type="submit">Logout</button>
+    </form>
+    <p><a th:href="@{/store/commandes}">Mes commandes</a></p>
 </div>
-</body>
-</html>

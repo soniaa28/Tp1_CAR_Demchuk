@@ -24,19 +24,13 @@ public class ClientService {
         clientRepository.save(client);
     }
 
-    public Optional<Client> findByEmail(String email) {
-        return clientRepository.findById(email);
+    public Client findByEmail(String email) {
+        return clientRepository.findById(email).orElse(null);
     }
 
     public Optional<Client> login(String email, String password) {
-        Optional<Client> clientOpt = clientRepository.findById(email);
-        if(clientOpt.isPresent())
-        {
-            Client client = clientOpt.get();
-            if(client.getPassword().equals(password)){
-                return Optional.of(client);
-            }
-        }
-        return Optional.empty();
+        return clientRepository.findById(email)
+                .filter(c -> c.getPassword() != null && c.getPassword().equals(password));
     }
+
 }

@@ -1,44 +1,74 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.Client;
+import com.example.demo.entity.Commande;
+import com.example.demo.service.ClientService;
 import com.example.demo.service.CommandeService;
+import com.example.demo.service.LigneService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.Map;
+import java.util.List;
 
 @Controller
 public class CommandeController {
+
+    private final ClientService clientService;
     private final CommandeService commandeService;
+    private final LigneService ligneService;
 
-    public CommandeController(CommandeService commandeService) {
+    public CommandeController(ClientService clientService,
+                              CommandeService commandeService,
+                              LigneService ligneService) {
+        this.clientService = clientService;
         this.commandeService = commandeService;
+        this.ligneService = ligneService;
     }
+
+    private Client requireClient(HttpSession session) {
+        String email = (String) session.getAttribute("clientEmail");
+        if (email == null) return null;
+        return clientService.findByEmail(email);
+    }
+
+    // список команд (для залогиненного клиента)
     @GetMapping("/store/commandes")
-    public ModelAndView commandes(HttpSession session) {
-        Client client = (Client) session.getAttribute("client");
-        if (client == null) {
-            return new ModelAndView("redirect:/store/login");
-        }
+    public ModelAndView list(HttpSession session) {
+        Client client = requireClient(session);
+        if (client == null) return new ModelAndView("redirect:/store/login");
 
-        return new ModelAndView("commandes", Map.of(
-                "client", client,
-                "commandes", commandeService.getCommandesForClient(client)
-        ));
+        List<Commande> commandes = commandeService.listForClientEmail(client.getEmail());
+
+        ModelAndView mv = new ModelAndView("commandes");
+        mv.addObject("client", client);
+        mv.addObject("commandes", commandes);
+        return mv;
     }
-    @PostMapping("/store/commandes/create")
-    public RedirectView createCommande(HttpSession session) {
-        Client client = (Client) session.getAttribute("client");
-        if (client == null) {
-            return new RedirectView("/store/login");
-        }
 
-        commandeService.createCommande(client);
+    // создать новую команду
+    @PostMapping("/store/commandes/create")
+    public RedirectView create(HttpSession session) {
+        Client client = requireClient(session);
+        if (client == null) return new RedirectView("/store/login");
+
+        commandeService.createForClient(client);
         return new RedirectView("/store/commandes");
+    }
+    @GetMapping("/store/commandes/{id}")
+    public ModelAndView show(@PathVariable Long id, HttpSession session) {
+        Client client = requireClient(session);
+        if (client == null) return new ModelAndView("redirect:/store/login");
+
+        Commande commande = commandeService.findForClient(id, client.getEmail());
+        if (commande == null) return new ModelAndView("redirect:/store/commandes");
+
+        ModelAndView mv = new ModelAndView("commande"); // => templates/commande.html
+        mv.addObject("client", client);
+        mv.addObject("commande", commande);
+        mv.addObject("lignes", ligneService.listByCommande(id));
+        return mv;
     }
 }

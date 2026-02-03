@@ -1,0 +1,63 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Commande</title>
+</head>
+<body>
+
+<h1>Commande</h1>
+
+<p>
+    Client: <b th:text="${client.prenom}"></b> <span th:text="${client.nom}"></span>
+</p>
+
+<p>
+    Commande ID: <b th:text="${commande.id}"></b>
+</p>
+
+<h2>Ajouter une ligne</h2>
+
+<form method="post" th:action="@{/store/commandes/{id}/lignes/add(id=${commande.id})}">
+    <input name="libelle" placeholder="Libellé produit" required>
+    <input name="quantite" type="number" min="1" value="1" required>
+    <input name="prixUnitaire" type="number" step="0.01" min="0" value="0" required>
+    <button type="submit">Ajouter</button>
+</form>
+
+<h2>Lignes</h2>
+
+<table border="1" cellpadding="6">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Libellé</th>
+        <th>Quantité</th>
+        <th>Prix unitaire</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${#lists.isEmpty(lignes)}">
+        <td colspan="5">Aucune ligne</td>
+    </tr>
+
+    <tr th:each="l : ${lignes}">
+        <td th:text="${l.id}"></td>
+        <td th:text="${l.libelle}"></td>
+        <td th:text="${l.quantite}"></td>
+        <td th:text="${l.prixUnitaire}"></td>
+        <td>
+            <form method="post"
+                  th:action="@{/store/commandes/{cid}/lignes/{lid}/delete(cid=${commande.id}, lid=${l.id})}">
+                <button type="submit">Supprimer</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p><a th:href="@{/store/commandes}">Back to commandes</a></p>
+
+</body>
+</html>

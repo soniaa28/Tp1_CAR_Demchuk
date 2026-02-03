@@ -9,15 +9,27 @@ import java.util.List;
 
 @Service
 public class CommandeService {
+
     private final CommandeRepository commandeRepository;
 
-    public CommandeService(CommandeRepository commandeRepository){
+    public CommandeService(CommandeRepository commandeRepository) {
         this.commandeRepository = commandeRepository;
     }
-    public void createCommande(Client client){
-        commandeRepository.save(new Commande(client));
+
+    public List<Commande> listForClientEmail(String email) {
+        return commandeRepository.findByClientEmailOrderByCreatedAtDesc(email);
     }
-    public List<Commande> getCommandesForClient(Client client){
-        return commandeRepository.findByClientEmailOrderByIdDesc(client.getEmail());
+
+    public void createForClient(Client client) {
+        Commande c = new Commande();
+        c.setClient(client);
+        commandeRepository.save(c);
+    }
+
+    public Commande findById(Long id) {
+        return commandeRepository.findById(id).orElse(null);
+    }
+    public Commande findForClient(Long id, String email) {
+        return commandeRepository.findByIdAndClientEmail(id, email).orElse(null);
     }
 }

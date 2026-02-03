@@ -2,16 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Commandes</title>
+  <title>Mes commandes</title>
 </head>
 <body>
 
 <h1>Mes commandes</h1>
 
 <p>
-  Client: <b th:text="${client.prenom}"></b> <span th:text="${client.nom}"></span>
+  Client: <b th:text="${client.nom}"></b> <span th:text="${client.prenom}"></span>
 </p>
 
+<!-- ВАЖНО: создание должно быть POST -->
 <form method="post" th:action="@{/store/commandes/create}">
   <button type="submit">Créer une commande</button>
 </form>
@@ -22,16 +23,21 @@
   <thead>
   <tr>
     <th>ID</th>
-    <th>Date</th>
+    <th>Created at</th>
   </tr>
   </thead>
+
   <tbody>
   <tr th:if="${#lists.isEmpty(commandes)}">
     <td colspan="2">Aucune commande</td>
   </tr>
 
   <tr th:each="c : ${commandes}">
-    <td th:text="${c.id}"></td>
+    <!-- ВОТ ТУТ И НУЖНА ССЫЛКА -->
+    <td>
+      <a th:href="@{/store/commandes/{id}(id=${c.id})}"
+         th:text="${c.id}"></a>
+    </td>
     <td th:text="${c.createdAt}"></td>
   </tr>
   </tbody>
