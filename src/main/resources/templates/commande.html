@@ -58,6 +58,8 @@
 </table>
 
 <p><a th:href="@{/store/commandes}">Back to commandes</a></p>
-
+<p>
+    <a th:href="@{/store/commandes/{id}/print(id=${commande.id})}">Imprimer</a>
+</p>
 </body>
 </html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Impression commande</title>
+</head>
+<body>
+
+<h1>Commande à imprimer</h1>
+
+<p>
+    Client: <b th:text="${client.prenom}"></b> <span th:text="${client.nom}"></span><br>
+    Commande ID: <b th:text="${commande.id}"></b><br>
+    Date: <span th:text="${commande.createdAt}"></span>
+</p>
+
+<table border="1" cellpadding="6">
+    <thead>
+    <tr>
+        <th>Libellé</th>
+        <th>Quantité</th>
+        <th>Prix unitaire</th>
+        <th>Sous-total</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="l : ${lignes}">
+        <td th:text="${l.libelle}"></td>
+        <td th:text="${l.quantite}"></td>
+        <td th:text="${l.prixUnitaire}"></td>
+        <td th:text="${l.quantite * l.prixUnitaire}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<h3>Total: <span th:text="${total}"></span></h3>
+
+<p>
+    <button onclick="window.print()">Print</button>
+</p>
+
+<p><a th:href="@{/store/commandes/{id}(id=${commande.id})}">Back</a></p>
+
+</body>
+</html>

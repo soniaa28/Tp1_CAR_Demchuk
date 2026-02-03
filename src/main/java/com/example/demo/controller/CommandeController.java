@@ -71,4 +71,28 @@ public class CommandeController {
         mv.addObject("lignes", ligneService.listByCommande(id));
         return mv;
     }
+
+    @GetMapping("/store/commandes/{id}/print")
+    public ModelAndView print(@PathVariable Long id, HttpSession session) {
+        Client client = requireClient(session);
+        if (client == null) return new ModelAndView("redirect:/store/login");
+
+        Commande commande = commandeService.findById(id);
+        if (commande == null || !commande.getClient().getEmail().equals(client.getEmail())) {
+            return new ModelAndView("redirect:/store/commandes");
+        }
+
+        var lignes = ligneService.listByCommande(id);
+
+        double total = lignes.stream()
+                .mapToDouble(l -> l.getQuantite() * l.getPrixUnitaire())
+                .sum();
+
+        ModelAndView mv = new ModelAndView("print");
+        mv.addObject("client", client);
+        mv.addObject("commande", commande);
+        mv.addObject("lignes", lignes);
+        mv.addObject("total", total);
+        return mv;
+    }
 }
