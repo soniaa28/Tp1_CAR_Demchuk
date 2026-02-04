@@ -77,10 +77,8 @@ public class CommandeController {
         Client client = requireClient(session);
         if (client == null) return new ModelAndView("redirect:/store/login");
 
-        Commande commande = commandeService.findById(id);
-        if (commande == null || !commande.getClient().getEmail().equals(client.getEmail())) {
-            return new ModelAndView("redirect:/store/commandes");
-        }
+        Commande commande = commandeService.findForClient(id, client.getEmail());
+        if (commande == null) return new ModelAndView("redirect:/store/commandes");
 
         var lignes = ligneService.listByCommande(id);
 

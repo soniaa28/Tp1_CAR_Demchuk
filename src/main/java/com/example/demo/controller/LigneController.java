@@ -41,11 +41,8 @@ public class LigneController {
         Client client = requireClient(session);
         if (client == null) return new RedirectView("/store/login");
 
-        Commande commande = commandeService.findById(cid);
-        if (commande == null || commande.getClient() == null ||
-                !commande.getClient().getEmail().equals(client.getEmail())) {
-            return new RedirectView("/store/commandes");
-        }
+        Commande commande = commandeService.findForClient(cid, client.getEmail());
+        if (commande == null) return new RedirectView("/store/commandes");
 
         ligneService.add(
                 commande,
