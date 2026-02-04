@@ -3,47 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <title>Mes commandes</title>
+  <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
 
-<h1>Mes commandes</h1>
+<div class="page">
+  <div class="box">
+    <h1>Mes commandes</h1>
 
-<p>
-  Client: <b th:text="${client.nom}"></b> <span th:text="${client.prenom}"></span>
-</p>
+    <p>
+      Client: <b th:text="${client.prenom}"></b> <span th:text="${client.nom}"></span>
+    </p>
 
-<!-- ВАЖНО: создание должно быть POST -->
-<form method="post" th:action="@{/store/commandes/create}">
-  <button type="submit">Créer une commande</button>
-</form>
+    <form method="post" th:action="@{/store/commandes/create}">
+      <button type="submit">Créer une commande</button>
+    </form>
 
-<h2>Liste</h2>
+    <table class="table">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Date</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:if="${#lists.isEmpty(commandes)}">
+        <td colspan="2">Aucune commande</td>
+      </tr>
 
-<table border="1" cellpadding="6">
-  <thead>
-  <tr>
-    <th>ID</th>
-    <th>Created at</th>
-  </tr>
-  </thead>
+      <tr th:each="c : ${commandes}">
+        <td><a th:href="@{/store/commandes/{id}(id=${c.id})}" th:text="${c.id}"></a></td>
+        <td th:text="${c.createdAt}"></td>
+      </tr>
+      </tbody>
+    </table>
 
-  <tbody>
-  <tr th:if="${#lists.isEmpty(commandes)}">
-    <td colspan="2">Aucune commande</td>
-  </tr>
-
-  <tr th:each="c : ${commandes}">
-    <!-- ВОТ ТУТ И НУЖНА ССЫЛКА -->
-    <td>
-      <a th:href="@{/store/commandes/{id}(id=${c.id})}"
-         th:text="${c.id}"></a>
-    </td>
-    <td th:text="${c.createdAt}"></td>
-  </tr>
-  </tbody>
-</table>
-
-<p><a th:href="@{/store/home}">Back home</a></p>
+    <p><a th:href="@{/store/home}">Retour à l’accueil</a></p>
+  </div>
+</div>
 
 </body>
 </html>
